@@ -47,24 +47,36 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	public void draw(Graphics g) {
-		for (int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE;i++) {
-			g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
-			g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
+		if(running) {
+//			for (int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE;i++) {
+//				g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
+//				g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
+//			}
+			
+			g.setColor(Color.red);
+			g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+			
+			for(int i = 0; i < bodyParts; i++) {
+				if(i == 0) {
+					g.setColor(Color.green);
+					g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+				}
+				else {
+					g.setColor(new Color(45, 180, 0));
+					g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+					g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+				}
+			}
+			g.setColor(Color.red);
+			g.setFont(new Font("Ink Free", Font.BOLD, 25));
+			FontMetrics metrics = getFontMetrics(g.getFont());
+			g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten))/2, SCREEN_HEIGHT/16);
 		}
 		
-		g.setColor(Color.red);
-		g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
-		
-		for(int i = 0; i < bodyParts; i++) {
-			if(i == 0) {
-				g.setColor(Color.green);
-				g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-			}
-			else {
-				g.setColor(new Color(45, 180, 0));
-				g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-			}
+		else {
+			gameOver(g);
 		}
+		
 	}
 	
 	public void newApple() {
@@ -96,7 +108,11 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	public void checkApple() {
-		
+		if((x[0] == appleX) && (y[0] == appleY)) {
+			bodyParts++;
+			applesEaten++;
+			newApple();
+		}
 	}
 	public void checkCollisions() {
 		// checks if head collides with body
@@ -126,6 +142,15 @@ public class GamePanel extends JPanel implements ActionListener{
 		
 	}
 	public void gameOver(Graphics g) {
+		g.setColor(Color.red);
+		g.setFont(new Font("Ink Free", Font.BOLD, 25));
+		FontMetrics metrics1 = getFontMetrics(g.getFont());
+		g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: " + applesEaten))/2, SCREEN_HEIGHT/16);
+		//Game Over text
+		g.setColor(Color.red);
+		g.setFont(new Font("Ink Free", Font.BOLD, 75));
+		FontMetrics metrics2 = getFontMetrics(g.getFont());
+		g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
 		
 	}
 	
